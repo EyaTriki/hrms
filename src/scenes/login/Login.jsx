@@ -3,7 +3,7 @@ import axios from 'axios';
 import "./login.scss";
 import jwt_decode from "jwt-decode";
 import Dashboard from '../dashboard';
-import { useAuth } from '../../context/AuthContext';
+
 import { useNavigate} from "react-router-dom";
 
 

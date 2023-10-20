@@ -1,12 +1,14 @@
-import { Box, Button, TextField, Select, MenuItem, FormControl, InputLabel,InputAdornment } from "@mui/material";
+import { Box, Button, TextField, Select, MenuItem, FormControl, InputLabel,InputAdornment ,useTheme,} from "@mui/material";
 import { Formik, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
+import { tokens } from "../../theme";
 import DateRangeIcon from "@mui/icons-material/DateRange"; 
 const Form = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
-
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   const handleFormSubmit = (values) => {
     console.log(values);
   };
@@ -29,13 +31,13 @@ const Form = () => {
           handleSubmit,
           setFieldValue,
         }) => (
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} >
             <Box
               display="grid"
-              gap="30px"
+              gap="40px"
               gridTemplateColumns="repeat(4, minmax(0, 1fr))"
               sx={{
-                "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+                "& > div": { gridColumn: isNonMobile ? undefined : "span 4" , marginTop:0.3},
               }}
             >
               <TextField
@@ -49,7 +51,7 @@ const Form = () => {
                 name="firstName"
                 error={!!touched.firstName && !!errors.firstName}
                 helperText={touched.firstName && errors.firstName}
-                sx={{ gridColumn: "span 2" }}
+                sx={{ gridColumn: "span 2" ,backgroundColor:colors.primary[400]}}
               />
               <TextField
                 fullWidth
@@ -62,7 +64,7 @@ const Form = () => {
                 name="lastName"
                 error={!!touched.lastName && !!errors.lastName}
                 helperText={touched.lastName && errors.lastName}
-                sx={{ gridColumn: "span 2" }}
+                sx={{ gridColumn: "span 2",backgroundColor:colors.primary[400] }}
               />
               <TextField
                 fullWidth
@@ -75,7 +77,7 @@ const Form = () => {
                 name="email"
                 error={!!touched.email && !!errors.email}
                 helperText={touched.email && errors.email}
-                sx={{ gridColumn: "span 2" }}
+                sx={{ gridColumn: "span 2" ,backgroundColor:colors.primary[400]}}
               />
               <TextField
                 fullWidth
@@ -88,7 +90,7 @@ const Form = () => {
                 name="contact"
                 error={!!touched.contact && !!errors.contact}
                 helperText={touched.contact && errors.contact}
-                sx={{ gridColumn: "span 2" }}
+                sx={{ gridColumn: "span 2" ,backgroundColor:colors.primary[400]}}
               />
               <TextField
                 fullWidth
@@ -101,22 +103,28 @@ const Form = () => {
                 name="address"
                 error={!!touched.address && !!errors.address}
                 helperText={touched.address && errors.address}
-                sx={{ gridColumn: "span 2" }}
+                sx={{ gridColumn: "span 2" ,backgroundColor:colors.primary[400]}}
               />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="date"
-                label="Joining Date"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.joiningDate}
-                name="joiningDate"
-                InputLabelProps={{ shrink: true }}
-                error={!!touched.joiningDate && !!errors.joiningDate}
-                helperText={touched.joiningDate && errors.joiningDate}
-                sx={{ gridColumn: "span 2" }}
-              />
+                              <TextField
+                  fullWidth
+                  variant="filled"
+                  type="date"
+                  label="Joining Date"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.joiningDate}
+                  name="joiningDate"
+                  InputLabelProps={{ shrink: true }}
+                  error={!!touched.joiningDate && !!errors.joiningDate}
+                  helperText={touched.joiningDate && errors.joiningDate}
+                  sx={{ gridColumn: "span 2", backgroundColor: colors.primary[400] }}
+                  InputProps={{
+                    startAdornment: null, // Remove the icon
+                  }}
+                  onClick={(e) => e.preventDefault()} // Prevent the date picker from opening
+                  className="white-calendar-icon" // Add a CSS class
+                />
+
 
               <TextField
                 fullWidth
@@ -130,10 +138,10 @@ const Form = () => {
                 name="birthdate"
                 error={!!touched.birthdate && !!errors.birthdate}
                 helperText={touched.birthdate && errors.birthdate}
-                sx={{ gridColumn: "span 2" }}
+                sx={{ gridColumn: "span 2" ,backgroundColor:colors.primary[400]}}
               />
                 {/* Role Selection */}
-                <FormControl fullWidth variant="filled"  sx={{ gridColumn: "span 2" }}>
+                <FormControl fullWidth variant="filled"  sx={{ gridColumn: "span 2",backgroundColor:colors.primary[400] }}>
                 <InputLabel htmlFor="role">Role</InputLabel>
                 <Field
                   as={Select}
@@ -166,6 +174,7 @@ const Form = () => {
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
+                  backgroundColor:colors.primary[400]
                 }}
               />
             
@@ -180,11 +189,12 @@ const Form = () => {
                 name="password"
                 error={!!touched.password && !!errors.password}
                 helperText={touched.password && errors.password}
-                sx={{ gridColumn: "span 2" }}
+                sx={{ gridColumn: "span 2" ,backgroundColor:colors.primary[400]}}
               />
             </Box>
-            <Box display="flex" justifyContent="end" mt="20px">
-              <Button type="submit" color="secondary" variant="contained">
+            <Box display="flex" justifyContent="center" mt="50px">
+              <Button type="submit" color="secondary" variant="contained"sx={{
+                 fontSize: '18px' }} >
                 Create New User
               </Button>
             </Box>
