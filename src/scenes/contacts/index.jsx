@@ -1,26 +1,28 @@
-import { Box,IconButton  } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { mockDataContacts } from "../../data/mockData";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
-import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material"; 
+import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 
 const Contacts = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-const getStatusCellStyle = (status) => {
-    switch (status) {
+
+  const getTypeColor = (type) => {
+    switch (type) {
       case "Pending":
-        return { backgroundColor: "lightgray" }; // Grey for Pending
+        return colors.greenAccent[500];
       case "Approved":
-        return { backgroundColor: "lightgreen" }; // Green for Approved
+        return colors.blueAccent[500];
       case "Rejected":
-        return { backgroundColor: "lightcoral" }; // Red for Rejected
+        return colors.redAccent[500];
       default:
-        return {};
+        return colors.grey[500]; // Use your default color
     }
   };
+
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
     { field: "registrarId", headerName: "ID number" },
@@ -30,7 +32,6 @@ const getStatusCellStyle = (status) => {
       flex: 1,
       cellClassName: "name-column--cell",
     },
-   
     {
       field: "role",
       headerName: "Role",
@@ -50,6 +51,18 @@ const getStatusCellStyle = (status) => {
       field: "status",
       headerName: "Status",
       flex: 1,
+      renderCell: (params) => (
+        <div
+          style={{
+            backgroundColor: getTypeColor(params.value),
+            color: "#fff", // Text color
+            padding: "8px 16px",
+            borderRadius: "4px",
+          }}
+        >
+          {params.value}
+        </div>
+      ),
     },
     {
       field: "actions",
@@ -57,7 +70,7 @@ const getStatusCellStyle = (status) => {
       flex: 1,
       sortable: false,
       renderCell: (params) => (
-        <div >
+        <div>
           <IconButton>
             <EditIcon />
           </IconButton>
@@ -68,7 +81,6 @@ const getStatusCellStyle = (status) => {
       ),
     },
   ];
-
   return (
     <Box m="20px">
       <Header

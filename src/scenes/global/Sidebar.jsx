@@ -7,7 +7,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
-
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../theme";
@@ -122,9 +122,9 @@ const Sidebar = () => {
             <Typography
               variant="h6"
               color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
+              sx={{ m: "5px 0 5px 20px" }}
             >
-              {/* Data */}--------------------------------------------
+              {/* Data */}---------------------------------------------------
             </Typography>
             <Item
               title="Employees"
@@ -151,10 +151,10 @@ const Sidebar = () => {
             <Typography
               variant="h6"
               color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              {/* Pages */}--------------------------------------------
-            </Typography>
+              sx={{ m: "5px 0 5px 20px" }}
+            > </Typography>
+              {/* Pages */}--------------------------------------------------
+           
             <Item
               title="Profile"
               to="/form"
@@ -169,20 +169,15 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-             <Button
-        variant="contained"
-        color="secondary"
-        onClick={handleLogout}
-        sx={{
-          alignSelf:"center" ,
-          ml:"55px",
-        mt:"28px",
-        width: "100px", 
-        height: "40px", 
-        fontSize: "14px",}}
-      >
-        Logout
-      </Button>
+            {/* Pages */}--------------------------------------------------
+            <Item
+              title="Logout"
+              to="/logout" 
+              icon={<ExitToAppIcon sx={{ fontSize: "24px" }} />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+
           </Box>
         </Menu>
       </ProSidebar>
