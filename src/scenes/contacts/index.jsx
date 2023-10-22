@@ -19,7 +19,7 @@ const Contacts = () => {
       case "Rejected":
         return colors.redAccent[500];
       default:
-        return colors.grey[500]; // Use your default color
+        return colors.grey[500]; 
     }
   };
 

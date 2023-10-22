@@ -450,6 +450,92 @@ export const mockBarData = [
     donutColor: "hsl(274, 70%, 50%)",
   },
 ];
+export const contractData = [
+  {
+    month: "Jan",
+    CIVP: 5,
+    Karama: 3,
+    CDD: 6,
+    CDI: 7,
+  },
+  {
+    month: "Feb",
+    CIVP: 4,
+    Karama: 3,
+    CDD: 0,
+    CDI: 1,
+  },
+  {
+    month: "Mar",
+    CIVP: 3,
+    Karama: 5,
+    CDD: 6,
+    CDI: 4,
+  },
+  {
+    month: "Apr",
+    CIVP: 3,
+    Karama: 2,
+    CDD: 6,
+    CDI: 0,
+  },
+  {
+    month: "May",
+    CIVP: 0,
+    Karama: 1,
+    CDD: 0,
+    CDI: 0,
+  },
+  {
+    month: "June",
+    CIVP: 1,
+    Karama: 2,
+    CDD: 3,
+    CDI: 0,
+  },
+  {
+    month: "July",
+    CIVP: 4,
+    Karama: 3,
+    CDD: 0,
+    CDI: 2,
+  },
+  {
+    month: "Aug",
+    CIVP: 5,
+    Karama: 3,
+    CDD: 0,
+    CDI: 0,
+  },
+ {
+    month: "Sept",
+    CIVP: 2,
+    Karama: 5,
+    CDD: 4,
+    CDI: 5,
+  },{
+    month: "Oct",
+    CIVP: 2,
+    Karama: 3,
+    CDD: 9,
+    CDI: 0,
+  },
+  {
+    month: "Nov",
+    CIVP: 0,
+    Karama: 0,
+    CDD: 2,
+    CDI: 1,
+  },
+  {
+    month: "Dec",
+    CIVP: 7,
+    Karama: 5,
+    CDD: 6,
+    CDI: 4,
+  }
+ 
+];
 
 export const mockPieData = [
   {
@@ -523,11 +609,11 @@ export const mockLineData = [
       },
       {
         x: "Sept",
-        y: 0,
+        y: 3,
       },
       {
         x: "Oct",
-        y: 1,
+        y: 5,
       },
       {
         x: "Nov",
