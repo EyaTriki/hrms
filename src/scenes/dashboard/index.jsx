@@ -205,10 +205,10 @@ const Dashboard = () => {
     
   >
     <Typography variant="h5" fontWeight="650" marginBottom={3} >
-      Employee Composition
+      Employees Composition
     </Typography>
 
-    <ProgressCircle size="150" />
+    <ProgressCircle size="145" />
     <div
       style={{
         display: 'flex',
@@ -257,7 +257,7 @@ const Dashboard = () => {
             p="15px"
           >
             <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
-              Recent Transactions
+              Recent Events And Leaves
             </Typography>
           </Box>
           {mockTransactions.map((transaction, i) => (
@@ -287,7 +287,7 @@ const Dashboard = () => {
                 p="5px 10px"
                 borderRadius="4px"
               >
-                ${transaction.cost}
+                {transaction.cost}
               </Box>
             </Box>
           ))}
