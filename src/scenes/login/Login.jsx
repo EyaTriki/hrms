@@ -2,26 +2,69 @@ import React, { useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Typography, TextField, Button, Box, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import jwt_decode from "jwt-decode";
+import { useAuth } from '../../context/AuthContext';
+import Dashboard from '../dashboard';
+
 
 const Login = () => {
+  const [user , setUser]=useState(null);
+  const [email,setEmail]=useState("");
+  const [password , setPassword]=useState("");
+  const [error, setError]=useState(false);
+  const [success , setSuccess]=useState(false);
+  const { isAuthenticated , handleLogin} = useAuth();
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+
+  const refreshToken = async () => {
     try {
-      // Votre logique de connexion ici
-
-      // Exemple : const res = await axios.post("/users/login", { email, password });
-      // handleLogin(res.data.accessToken);
-      // navigate("/Dashboard");
+      const res = await axios.post("http://localhost:5001/api/users/refresh", { token: user.refreshToken });
+      setUser({
+        ...user,
+        accessToken: res.data.accessToken,
+        refreshToken: res.data.refreshToken,
+      });
+      return res.data;
     } catch (err) {
-      // setError(true);
       console.log(err);
     }
   };
+
+  const axiosJWT = axios.create()
+
+  axiosJWT.interceptors.request.use(
+    async (config) => {
+      let currentDate = new Date();
+      const decodedToken = jwt_decode(user.accessToken);
+      if (decodedToken.exp * 1000 < currentDate.getTime()) {
+        const data = await refreshToken();
+        config.headers["authorization"] = "Bearer " + data.accessToken;
+      }
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+const handleSubmit = async (e)=>{
+  e.preventDefault();
+  try {
+    
+const res= await axios.post("http://localhost:5001/api/users/login",{email , password})
+setUser(res.data)
+handleLogin(res.data.accessToken);
+console.log(res.data)
+navigate("/dashboard");
+  } catch (err) {
+    setSuccess(false);
+      setError(true);
+      
+      console.log(err);
+  }
+}
+
 
   const theme = createTheme({
     palette: {
@@ -38,6 +81,11 @@ const Login = () => {
   });
 
   return (
+    <>
+
+    {isAuthenticated ?(
+       <Dashboard/>
+     ) : (
     <ThemeProvider theme={theme}>
       <Box
         sx={{
@@ -92,6 +140,8 @@ const Login = () => {
         </Paper>
       </Box>
     </ThemeProvider>
+      )}
+      </>
   );
 };
 

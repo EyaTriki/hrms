@@ -22,21 +22,29 @@ import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutl
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
+import axios from "axios";
+import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from "react-router-dom";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const navigate = useNavigate(); // Import the navigate function from react-router-dom
+
   return (
     <MenuItem
       active={selected === title}
       style={{
         color: colors.grey[100],
       }}
-      onClick={() => setSelected(title)}
+      onClick={() => {
+        setSelected(title);
+        navigate(to); // Use navigate to handle navigation
+      }}
       icon={icon}
     >
       <Typography>{title}</Typography>
-      <Link to={to} />
+      <Link to={to} onClick={(e) => e.preventDefault()} /> {/* Prevent default navigation */}
     </MenuItem>
   );
 };
@@ -46,9 +54,22 @@ const Sidebar = () => {
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
-  const handleLogout = () => {
-    console.log("logout");
+  const { isAuthenticated, handleLogout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post("http://localhost:5001/api/users/logout");
+      handleLogout(res.data.token);
+
+      console.log("Logged out!");
+      window.location.replace("/login");
+    } catch (err) {
+      console.log("Error during logout:", err);
+    };
   };
+
   return (
     <Box
       display="flex"
@@ -74,7 +95,7 @@ const Sidebar = () => {
                 ml="15px"
               >
                 <Typography variant="h3" color={colors.grey[100]}>
-                  ADMINIS
+                HR MANAGERS
                 </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
@@ -104,7 +125,7 @@ const Sidebar = () => {
                   Eya Triki
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
-                  Admin
+                Human Resources Manager
                 </Typography>
               </Box>
             </Box>
@@ -113,7 +134,7 @@ const Sidebar = () => {
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
             <Item
               title="Dashboard"
-              to="/"
+              to="/dashboard"
               icon={<HomeOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -124,7 +145,8 @@ const Sidebar = () => {
               color={colors.grey[300]}
               sx={{ m: "5px 0 5px 20px" }}
             >
-              {/* Data */}---------------------------------------------------
+              {/* Data */}
+              ---------------------------------------------------
             </Typography>
             <Item
               title="Employees"
@@ -152,9 +174,10 @@ const Sidebar = () => {
               variant="h6"
               color={colors.grey[300]}
               sx={{ m: "5px 0 5px 20px" }}
-            > </Typography>
-              {/* Pages */}--------------------------------------------------
-           
+            >
+              {/* Pages */}
+              --------------------------------------------------
+            </Typography>
             <Item
               title="Profile"
               to="/form"
@@ -169,19 +192,19 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-            {/* Pages */}--------------------------------------------------
-            <Item
-              title="Logout"
-              to="/logout" 
-              icon={<ExitToAppIcon sx={{ fontSize: "24px" }} />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
+            {/* Pages */}
+            --------------------------------------------------
+            <Button
+              variant="text"
+              startIcon={<ExitToAppIcon sx={{ fontSize: "24px" }} />}  
+              onClick={handleSubmit}
+              style={{ color: colors.grey[100], marginLeft: "20px", paddingLeft: "0" }}
+            >
+              Logout
+            </Button>
           </Box>
         </Menu>
       </ProSidebar>
-     
     </Box>
   );
 };
