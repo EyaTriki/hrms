@@ -16,6 +16,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import Calendar from "./scenes/calendar/calendar";
 import Login from "./scenes/login/Login";
+import Profile from "./scenes/profile/Profile"
 import { AuthProvider, useAuth } from '../src/context/AuthContext';
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
                     <Route path="/contacts" element={<Contacts />} />
                     <Route path="/invoices" element={<Invoices />} />
                     <Route path="/form" element={<Form />} />
+                    <Route path="/profile" element={<Profile />} />
                     <Route path="/bar" element={<Bar />} />
                     <Route path="/pie" element={<Pie />} />
                     <Route path="/line" element={<Line />} />
@@ -53,7 +55,7 @@ function App() {
               </div>
             ) : (
               <Routes>
-                <Route path="/login" element={<Login />} />
+                <Route path="/" element={<Login />} />
                 
               </Routes>
             )}

@@ -64,7 +64,7 @@ const Sidebar = () => {
       handleLogout(res.data.token);
 
       console.log("Logged out!");
-      window.location.replace("/login");
+      window.location.replace("/");
     } catch (err) {
       console.log("Error during logout:", err);
     };
@@ -180,7 +180,7 @@ const Sidebar = () => {
             </Typography>
             <Item
               title="Profile"
-              to="/form"
+              to="/profile"
               icon={<PersonOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}

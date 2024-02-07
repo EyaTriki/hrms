@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect } from "react";
+import axios from 'axios';
 import {
   Box,
   Card,
@@ -10,6 +11,7 @@ import {
   Button,
   Avatar,
 } from "@mui/material";
+import { Link } from 'react-router-dom';
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { mockDataTeam } from "../../data/mockData";
@@ -29,10 +31,10 @@ const Team = () => {
     setPage(newPage);
   };
 
-  const renderAccessIcon = (access) => {
-    if (access === "admin") {
+  const renderAccessIcon = (role) => {
+    if (role === "admin") {
       return <AdminPanelSettingsOutlinedIcon />;
-    } else if (access === "manager") {
+    } else if (role === "manager") {
       return <SecurityOutlinedIcon />;
     } else {
       return <LockOpenOutlinedIcon />;
@@ -45,34 +47,51 @@ const Team = () => {
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const displayedData = mockDataTeam.slice(startIndex, endIndex);
+  const [employees, setEmployees] = useState([]);
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get("http://localhost:5001/api/employes/"); 
+        setEmployees(response.data); 
+      } catch (error) {
+        console.error("Error fetching employees:", error);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
 
   return (
     <Box m="20px">
       <Header title="EMPLOYEES" subtitle="All employees" />
+       <Link to="/form" style={{ textDecoration: 'none' }}>
       <Button
           variant="contained"
           sx={{
-            backgroundColor: colors.primary[700], // Use the primary color from the theme
-            "&:hover": {
-              backgroundColor: colors.primary[500], // Change color on hover
-            },
+            backgroundColor: colors.blueAccent[700],
+            color: colors.grey[100],
+            fontSize: "14px",
+            fontWeight: "bold",
+            padding: "10px 20px",
           }}
           onClick={handleCreateEmployee}
-          style={{ marginBottom: "10x", marginLeft:"1400px", marginTop:"-110px" }}
+          style={{ marginBottom: "8x", marginLeft:"1060px", marginTop:"-100px" }}
         >
           Create Employee
         </Button>
-      <Box m="5px 0" sx={{ display: "flex", flexDirection: "column" }}>
+        </Link>
+      <Box m="5px 0" sx={{ display: "flex", flexDirection: "column", marginTop: "-28px"  }}>
 
         <Grid container spacing={2}>
-          {displayedData.map((data) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={data.id}>
+          {employees.map((data) => (
+            <Grid item xs={11} sm={5} md={3} lg={3} key={data.id}>
               <Card sx={{ backgroundColor: colors.primary[400] }}>
                 <CardContent style={{ display: "flex" }}>
                   {/* Circular avatar */}
                   <Avatar
                     alt={data.name}
-                    src={data.photo}
+                    src={data.image}
                     sx={{
                       width: 100,
                       height: 100,
@@ -93,18 +112,18 @@ const Team = () => {
                       display="flex"
                       alignItems="center"
                       backgroundColor={
-                        data.access === "admin"
+                        data.role === "admin"
                           ? colors.blueAccent[700]
-                          : data.access === "manager"
+                          : data.role === "manager"
                           ? colors.blueAccent[700]
                           : colors.blueAccent[700]
                       }
                       borderRadius="4px"
-                      padding="5px"
+                      padding="4px"
                     >
-                      {renderAccessIcon(data.access)}
-                      <Typography color={colors.grey[100]} sx={{ ml: "10px" }}>
-                        {data.access}
+                      {renderAccessIcon(data.role)}
+                      <Typography color={colors.grey[100]} sx={{ ml: "10px" }}variant="h6">
+                        {data.role}
                       </Typography>
                     </Box>
                   </div>

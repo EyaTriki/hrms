@@ -1,26 +1,65 @@
-import { Box, Button, TextField, Select, MenuItem, FormControl, InputLabel,InputAdornment ,useTheme,} from "@mui/material";
+import { Box, Button, TextField, Select, MenuItem, FormControl, InputLabel, InputAdornment, useTheme } from "@mui/material";
 import { Formik, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
-import DateRangeIcon from "@mui/icons-material/DateRange"; 
+import axios from 'axios';
+import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
+
 const Form = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const handleFormSubmit = (values) => {
-    console.log(values);
+
+  const handleFormSubmit = async (values) => {
+    try {
+      // Envoie des données du formulaire vers l'API back-end
+      const response = await axios.post('http://localhost:5001/api/employes', values);
+
+      // Gérer la réponse si la création réussit
+      console.log('Employee created:', response.data);
+      // Faire quelque chose avec la réponse si nécessaire (par exemple, rediriger l'utilisateur)
+    } catch (error) {
+      // Gérer les erreurs en cas d'échec de la création
+      console.error('Error creating employee:', error);
+      // Afficher un message à l'utilisateur ou gérer l'erreur de toute autre manière
+    }
   };
+
+  const phoneRegExp = /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
+  const initialValues = {
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    joiningDate: "",
+    age: "",
+    role: "",
+    file: null,
+    password: "",
+  };
+  
+  const checkoutSchema = yup.object().shape({
+    name: yup.string().required("Full Name is required"),
+    email: yup.string().email("Invalid email").required("Email is required"),
+    phone: yup.string().matches(phoneRegExp, "Phone number is not valid").required("Phone number is required"),
+    address: yup.string().required("Address is required"),
+    joiningDate: yup.date().required("Joining Date is required"),
+    age: yup.number().required("Age is required").positive("Age must be positive").integer("Age must be an integer"),
+    role: yup.string().required("Role is required"),
+    file: yup.mixed(),
+    password: yup.string().required("Password is required"),
+  });
 
   return (
     <Box m="20px">
-      <Header title="CREATE EMPLOYEE" subtitle="Create a New Employee Profile" />
+      <Header title="ADD EMPLOYEE" subtitle="Create a New Employee Profile" />
 
       <Formik
-        onSubmit={handleFormSubmit}
         initialValues={initialValues}
         validationSchema={checkoutSchema}
+        onSubmit={handleFormSubmit}
       >
         {({
           values,
@@ -31,7 +70,7 @@ const Form = () => {
           handleSubmit,
           setFieldValue,
         }) => (
-          <form onSubmit={handleSubmit} >
+          <form onSubmit={handleSubmit}>
             <Box
               display="grid"
               gap="40px"
@@ -40,32 +79,56 @@ const Form = () => {
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" , marginTop:0.3},
               }}
             >
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="First Name"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.firstName}
-                name="firstName"
-                error={!!touched.firstName && !!errors.firstName}
-                helperText={touched.firstName && errors.firstName}
-                sx={{ gridColumn: "span 2" ,backgroundColor:colors.primary[400]}}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Last Name"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.lastName}
-                name="lastName"
-                error={!!touched.lastName && !!errors.lastName}
-                helperText={touched.lastName && errors.lastName}
-                sx={{ gridColumn: "span 2",backgroundColor:colors.primary[400] }}
-              />
+              <Box gridColumn="span 1" display="flex" justifyContent="center" alignItems="center">
+              <label htmlFor="image-upload">
+  <input
+    accept="image/*"
+    id="image-upload"
+    type="file"
+    name="image" // Assurez-vous que le champ name correspond à celui attendu par votre backend
+    onChange={(event) => {
+      const file = event.currentTarget.files[0];
+      setFieldValue("file", file);
+    }}
+    style={{ display: 'none' }}
+  />
+  <Box
+    width="100px"
+    height="100px"
+    borderRadius="50%"
+    bgcolor="#f0f0f0"
+    display="flex"
+    justifyContent="center"
+    alignItems="center"
+    cursor="pointer"
+  >
+    {values.file ? (
+      <img
+        src={URL.createObjectURL(values.file)}
+        alt="Preview"
+        style={{ maxWidth: '100%', maxHeight: '100%', borderRadius: '50%' }}
+      />
+    ) : (
+      <InsertPhotoIcon fontSize="large" style={{ color: theme.palette.primary.dark }} />
+
+    )}
+  </Box>
+</label>
+          </Box>
+            <TextField
+              fullWidth
+              variant="filled"
+              type="text"
+              label="Full Name"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.name}
+              name="name"
+              error={!!touched.name && !!errors.name}
+              helperText={touched.name && errors.name}
+              sx={{ gridColumn: "span 2", backgroundColor: colors.primary[400] }}
+            />
+             
               <TextField
                 fullWidth
                 variant="filled"
@@ -86,10 +149,10 @@ const Form = () => {
                 label="Phone Number"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.contact}
-                name="contact"
-                error={!!touched.contact && !!errors.contact}
-                helperText={touched.contact && errors.contact}
+                value={values.phone}
+                name="phone"
+                error={!!touched.phone && !!errors.phone}
+                helperText={touched.phone && errors.phone}
                 sx={{ gridColumn: "span 2" ,backgroundColor:colors.primary[400]}}
               />
               <TextField
@@ -125,19 +188,17 @@ const Form = () => {
                   className="white-calendar-icon" // Add a CSS class
                 />
 
-
               <TextField
                 fullWidth
                 variant="filled"
-                type="date"
-                label="Birth Date"
-                InputLabelProps={{ shrink: true }}
+                type="text"
+                label="Age "
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.birthdate}
-                name="birthdate"
-                error={!!touched.birthdate && !!errors.birthdate}
-                helperText={touched.birthdate && errors.birthdate}
+                value={values.age}
+                name="age"
+                error={!!touched.age && !!errors.age}
+                helperText={touched.age && errors.age}
                 sx={{ gridColumn: "span 2" ,backgroundColor:colors.primary[400]}}
               />
                 {/* Role Selection */}
@@ -154,9 +215,11 @@ const Form = () => {
                  
                 >
                   <MenuItem value="">Select a role</MenuItem>
-                  <MenuItem value="manager">Manager</MenuItem>
-                  <MenuItem value="employee">Employee</MenuItem>
-                  <MenuItem value="supervisor">Supervisor</MenuItem>
+                  <MenuItem value="Graphic Designer">Graphic Designer</MenuItem>
+                  <MenuItem value="Web Developer">Web Developer</MenuItem>
+                  <MenuItem value="Mobile Developer">Mobile Developer</MenuItem>
+                  <MenuItem value="DevOps">DevOps</MenuItem>
+                  <MenuItem value="Team Lead">Team Lead</MenuItem>
                 </Field>
                 <ErrorMessage name="role" component="div" className="error" />
               </FormControl>
@@ -177,7 +240,7 @@ const Form = () => {
                   backgroundColor:colors.primary[400]
                 }}
               />
-            
+          
             <TextField
                 fullWidth
                 variant="filled"
@@ -195,7 +258,7 @@ const Form = () => {
             <Box display="flex" justifyContent="center" mt="50px">
               <Button type="submit" color="secondary" variant="contained"sx={{
                  fontSize: '18px' }} >
-                Create New User
+                Create New Employee
               </Button>
             </Box>
           </form>
@@ -212,7 +275,7 @@ const checkoutSchema = yup.object().shape({
   firstName: yup.string().required("required"),
   lastName: yup.string().required("required"),
   email: yup.string().email("invalid email").required("required"),
-  contact: yup
+  phone: yup
     .string()
     .matches(phoneRegExp, "Phone number is not valid")
     .required("required"),
@@ -220,14 +283,15 @@ const checkoutSchema = yup.object().shape({
   role: yup.string().required("Please select a role"), 
 });
 const initialValues = {
-  firstName: "",
-  lastName: "",
+  name: "",
+  phone:"",
   email: "",
-  contact: "",
+  phone: "",
   address: "",
   role: "", 
   file: null,
   password:"",
+  image: null,
 };
 
 export default Form;

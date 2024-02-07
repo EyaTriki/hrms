@@ -56,7 +56,8 @@ const res= await axios.post("http://localhost:5001/api/users/login",{email , pas
 setUser(res.data)
 handleLogin(res.data.accessToken);
 console.log(res.data)
-navigate("/dashboard");
+//navigate("/dashboard");
+window.location.replace("/dashboard");
   } catch (err) {
     setSuccess(false);
       setError(true);
